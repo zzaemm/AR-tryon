@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="560" viewBox="0 0 360 560">
+  <!-- Placeholder product art. Replace with a real transparent PNG of the watch. -->
+  <defs>
+    <linearGradient id="leather" x1="0" x2="1">
+      <stop offset="0" stop-color="#6e4526"/><stop offset=".5" stop-color="#a8723f"/><stop offset="1" stop-color="#6a4224"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6e2a8"/><stop offset=".5" stop-color="#b48a3c"/><stop offset="1" stop-color="#ecd393"/>
+    </linearGradient>
+    <radialGradient id="cream" cx=".45" cy=".4" r=".8">
+      <stop offset="0" stop-color="#fbf6ea"/><stop offset="1" stop-color="#e3d7bd"/>
+    </radialGradient>
+  </defs>
+  <rect x="108" y="0" width="144" height="200" rx="10" fill="url(#leather)"/>
+  <rect x="108" y="360" width="144" height="200" rx="10" fill="url(#leather)"/>
+  <g fill="none" stroke="#f0dcb8" stroke-width="2" stroke-dasharray="7 6" opacity=".8">
+    <path d="M118 0V190H242V0"/>
+    <path d="M118 560V370H242V560"/>
+  </g>
+  <rect x="318" y="263" width="24" height="34" rx="5" fill="url(#gold)" stroke="#8a6a2c" stroke-width="1.5"/>
+  <rect x="306" y="214" width="16" height="22" rx="4" fill="url(#gold)" transform="rotate(32 314 225)"/>
+  <rect x="306" y="324" width="16" height="22" rx="4" fill="url(#gold)" transform="rotate(-32 314 335)"/>
+  <circle cx="180" cy="280" r="140" fill="url(#gold)" stroke="#8a6a2c" stroke-width="2"/>
+  <circle cx="180" cy="280" r="120" fill="url(#cream)"/>
+  <g fill="none" stroke="#9b7a3a" stroke-width="2">
+    <circle cx="180" cy="226" r="28"/><circle cx="130" cy="290" r="28"/><circle cx="230" cy="290" r="28"/>
+  </g>
+  <g stroke="#3a2c1a" stroke-width="2.5" stroke-linecap="round">
+    <path d="M180 226L192 210M130 290L120 274M230 290L246 296"/>
+  </g>
+  <g stroke="#6b5426" stroke-width="5" stroke-linecap="round">
+    <path d="M180 168V184M180 392V376M292 280H276M68 280H84"/>
+  </g>
+  <g stroke-linecap="round">
+    <path d="M180 280L134 248" stroke="#2c2216" stroke-width="8"/>
+    <path d="M180 280L262 240" stroke="#2c2216" stroke-width="5"/>
+    <path d="M180 280L178 382" stroke="#b3442e" stroke-width="2.5"/>
+  </g>
+  <circle cx="180" cy="280" r="6" fill="#2c2216"/>
+  <ellipse cx="150" cy="228" rx="68" ry="34" fill="#fff" opacity=".18" transform="rotate(-30 150 228)"/>
+</svg>

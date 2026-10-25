@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="560" viewBox="0 0 360 560">
+  <!-- Placeholder product art. Replace with a real transparent PNG of the watch. -->
+  <defs>
+    <linearGradient id="link" x1="0" x2="1">
+      <stop offset="0" stop-color="#6f767e"/><stop offset=".22" stop-color="#e6e9ec"/><stop offset=".5" stop-color="#a7aeb5"/>
+      <stop offset=".78" stop-color="#f2f4f6"/><stop offset="1" stop-color="#666d75"/>
+    </linearGradient>
+    <linearGradient id="caseG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8fa"/><stop offset=".45" stop-color="#8b9299"/><stop offset="1" stop-color="#e2e5e8"/>
+    </linearGradient>
+    <radialGradient id="dial" cx=".42" cy=".38" r=".75">
+      <stop offset="0" stop-color="#2a3d5c"/><stop offset="1" stop-color="#0a1322"/>
+    </radialGradient>
+  </defs>
+  <rect x="98" y="0" width="164" height="560" fill="url(#link)"/>
+  <g stroke="#4b5259" stroke-opacity=".55" stroke-width="2">
+    <path d="M150 0V560M210 0V560"/>
+    <path d="M98 26H262M98 58H262M98 90H262M98 122H262M98 154H262M98 406H262M98 438H262M98 470H262M98 502H262M98 534H262"/>
+  </g>
+  <rect x="318" y="261" width="26" height="38" rx="6" fill="url(#caseG)" stroke="#5f666d" stroke-width="1.5"/>
+  <circle cx="180" cy="280" r="142" fill="url(#caseG)" stroke="#5f666d" stroke-width="2"/>
+  <circle cx="180" cy="280" r="124" fill="#1a1e23"/>
+  <circle cx="180" cy="280" r="114" fill="url(#dial)"/>
+  <g stroke="#e9edf2" stroke-width="5" stroke-linecap="round">
+    <path d="M172 178V196M188 178V196"/>
+    <path d="M180 384V366M282 280H264M78 280H96"/>
+    <path d="M231 192l-7 12M268 229l-12 7M268 331l-12-7M231 368l-7-12M129 368l7-12M92 331l12-7M92 229l12 7M129 192l7 12"/>
+  </g>
+  <g stroke-linecap="round">
+    <path d="M180 280L135 254" stroke="#f2f4f6" stroke-width="9"/>
+    <path d="M180 280L258 235" stroke="#f2f4f6" stroke-width="6"/>
+    <path d="M196 290L162 270" stroke="#d6b26a" stroke-width="2.5"/>
+    <path d="M180 280L212 372" stroke="#d6b26a" stroke-width="2.5"/>
+  </g>
+  <circle cx="180" cy="280" r="7" fill="#d6b26a"/>
+  <ellipse cx="148" cy="226" rx="70" ry="38" fill="#fff" opacity=".07" transform="rotate(-30 148 226)"/>
+</svg>

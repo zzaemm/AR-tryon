@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="110" viewBox="0 0 300 110">
+  <!-- Placeholder product art. Replace with a real transparent PNG of the ring, seen from above. -->
+  <defs>
+    <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a9097"/><stop offset=".3" stop-color="#f4f6f8"/><stop offset=".6" stop-color="#b9bfc5"/><stop offset="1" stop-color="#6b7178"/>
+    </linearGradient>
+    <radialGradient id="gem" cx=".4" cy=".35" r=".7">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#cfe6ff"/><stop offset="1" stop-color="#7fa6d6"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="32" width="300" height="46" rx="10" fill="url(#band)"/>
+  <circle cx="150" cy="55" r="34" fill="url(#band)"/>
+  <circle cx="150" cy="55" r="26" fill="url(#gem)"/>
+  <g stroke="#ffffff" stroke-opacity=".6" stroke-width="1.5" fill="none">
+    <path d="M150 29L150 81M124 55L176 55M132 37L168 73M168 37L132 73"/>
+  </g>
+  <g fill="#e9edf1">
+    <circle cx="150" cy="25" r="5"/><circle cx="150" cy="85" r="5"/><circle cx="120" cy="55" r="5"/><circle cx="180" cy="55" r="5"/>
+  </g>
+</svg>

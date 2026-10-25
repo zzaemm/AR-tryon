@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CLERV Try-On</title>
+<meta name="description" content="Try watches, bracelets and rings on your own wrist with your phone camera.">
+<meta name="theme-color" content="#0d0d0f">
+<style>
+  :root {
+    --bg: #0d0d0f; --fg: #f3efe6; --muted: #a8a294; --line: rgba(243, 239, 230, .14);
+    --gold: #c8a660; --panel: rgba(14, 14, 16, .84); --wa: #1f9d55; --err: #ffb4a6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--fg); overflow: hidden;
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+  button, a, label { font: inherit; color: inherit; }
+  [hidden] { display: none !important; }
+
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  #view { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+  /* iOS stops decoding frames for display:none video, so keep it in the tree but invisible. */
+  #cam { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  .top { position: absolute; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+    padding: calc(12px + env(safe-area-inset-top)) 16px 20px; background: linear-gradient(rgba(0,0,0,.55), transparent); }
+  .brand { font-weight: 700; letter-spacing: .32em; font-size: 15px; }
+  .tag { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+
+  .hint { position: absolute; left: 50%; top: calc(62px + env(safe-area-inset-top)); transform: translateX(-50%);
+    max-width: calc(100% - 32px); padding: 8px 14px; border-radius: 999px; font-size: 13px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+
+  .panel { position: absolute; inset: auto 0 0; display: grid; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--panel); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid var(--line); }
+  .current { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  #p-name { font-weight: 600; font-size: 16px; }
+  #p-price { color: var(--gold); font-size: 14px; }
+  .tools { display: flex; gap: 8px; }
+  .icon { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.06);
+    display: grid; place-items: center; cursor: pointer; }
+  .icon svg { width: 20px; height: 20px; }
+
+  .strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .strip::-webkit-scrollbar { display: none; }
+  .item { flex: 0 0 auto; width: 76px; display: grid; gap: 3px; justify-items: center; padding: 6px 5px; text-align: center;
+    scroll-snap-align: start; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.04); cursor: pointer; }
+  .item img { width: 44px; height: 44px; object-fit: contain; }
+  .item .n { font-size: 11px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .item .pr { font-size: 11px; color: var(--muted); }
+  .item[aria-pressed="true"] { border-color: var(--gold); background: rgba(200,166,96,.12); }
+
+  .cta { display: flex; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px;
+    border-radius: 12px; border: 1px solid var(--line); background: transparent; font-weight: 600; text-decoration: none; cursor: pointer; }
+  .btn.wa { flex: 1; background: var(--wa); border-color: transparent; color: #fff; }
+  #wa[hidden] + #dm { flex: 1; }
+  .btn.primary { background: var(--fg); color: #111; border-color: transparent; }
+  .btn svg { width: 18px; height: 18px; }
+
+  .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+    background: radial-gradient(120% 70% at 50% 25%, #23211d 0%, var(--bg) 70%); }
+  .card { width: 100%; max-width: 400px; display: grid; gap: 14px; text-align: center; }
+  #hero { width: 100%; height: 34vh; max-height: 300px; object-fit: contain; filter: drop-shadow(0 18px 30px rgba(0,0,0,.6)); }
+  .eyebrow { color: var(--gold); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+  h1 { font-size: 28px; line-height: 1.15; font-weight: 650; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .err { color: var(--err); font-size: 14px; }
+  .status { color: var(--muted); font-size: 12px; }
+  .file input { display: none; }
+</style>
+</head>
+<body>
+<main id="stage">
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="view" aria-label="Camera view with the product placed on your hand"></canvas>
+
+  <header class="top">
+    <span class="brand" id="brand">CLERV</span>
+    <span class="tag">Camera stays on your phone</span>
+  </header>
+
+  <div id="hint" class="hint" role="status" hidden></div>
+
+  <section class="panel" aria-label="Products">
+    <div class="current">
+      <div><div id="p-name"></div><div id="p-price"></div></div>
+      <div class="tools">
+        <label class="icon file" title="Try on a photo instead" aria-label="Try on a photo instead">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-9 9"/></svg>
+          <input type="file" accept="image/*" data-photo>
+        </label>
+        <button id="flip" class="icon" type="button" title="Switch camera" aria-label="Switch camera" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>
+        </button>
+        <button id="snap" class="icon" type="button" title="Save a photo" aria-label="Save a photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="strip" class="strip"></div>
+    <div class="cta">
+      <a id="wa" class="btn wa" target="_blank" rel="noopener noreferrer" hidden>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.3z"/></svg>
+        Order on WhatsApp
+      </a>
+      <a id="dm" class="btn" target="_blank" rel="noopener noreferrer" hidden>DM us</a>
+    </div>
+  </section>
+
+  <div id="start" class="overlay">
+    <div class="card">
+      <img id="hero" alt="">
+      <p class="eyebrow" id="eyebrow">Try before you order</p>
+      <h1 id="headline">See it on your wrist</h1>
+      <p class="sub">Point your camera at your wrist or hand. The video never leaves your phone; nothing is uploaded.</p>
+      <p id="err" class="err" role="alert" hidden></p>
+      <button id="go" class="btn primary" type="button">Start camera</button>
+      <label class="btn file">Use a photo instead<input type="file" accept="image/*" data-photo></label>
+      <p id="status" class="status">Loading try-on…</p>
+    </div>
+  </div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
